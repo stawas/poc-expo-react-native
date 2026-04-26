@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client --host lan --port 8081",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "ios:device": "expo run:ios --device --port 8081",
     "web": "expo start --web",
-    "prebuild": "EXPO_NO_GIT_STATUS=1 node node_modules/@expo/cli/build/bin/cli prebuild --clean"
+    "prebuild": "EXPO_NO_GIT_STATUS=1 node node_modules/@expo/cli/build/bin/cli prebuild --clean",
+    "start:expo-go": "expo start --go",
+    "start:lan": "expo start --dev-client --host lan --port 8081",
+    "start:tunnel": "expo start --dev-client --host tunnel --port 8081"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",

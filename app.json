@@ -7,7 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "my-first-expo-app",
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -16,7 +18,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.MyFirstExpoApp"
+      "bundleIdentifier": "com.anonymous.MyFirstExpoApp",
+      "appleTeamId": "Z6682K2L58"
     },
     "android": {
       "adaptiveIcon": {
