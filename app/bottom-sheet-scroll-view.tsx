@@ -1,6 +1,8 @@
 import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, {
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +13,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import { scheduleOnRN } from 'react-native-worklets';
 
 const { height } = Dimensions.get('window');
 
@@ -19,9 +22,11 @@ const SNAP_MIDDLE = height * 0.45;
 const SNAP_CLOSED = height;
 
 export default function BottomSheetScrollView() {
+  const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const translateY = useSharedValue(SNAP_MIDDLE);
   const startY = useSharedValue(0);
   const scrollY = useSharedValue(0);
+  const isExpanded = useSharedValue(false);
 
   const scrollGesture = Gesture.Native();
 
@@ -35,10 +40,25 @@ export default function BottomSheetScrollView() {
     .simultaneousWithExternalGesture(scrollGesture)
     .onStart(() => {
       startY.value = translateY.value;
+
+      // Log gesture start to trace the sheet's initial drag position.
+      // console.log('panGesture onStart', {
+      //   startY: startY.value,
+      //   translateY: translateY.value,
+      // });
     })
     .onUpdate(event => {
       const draggingDown = event.translationY > 0;
       const scrollIsAtTop = scrollY.value <= 0;
+
+      // Log gesture updates to debug drag direction and ScrollView handoff behavior.
+      console.log('panGesture onUpdate', {
+        translationY: event.translationY,
+        draggingDown,
+        scrollY: scrollY.value,
+        scrollIsAtTop,
+        translateY: translateY.value,
+      });
 
       // Allow sheet drag only when:
       // 1. dragging upward, or
@@ -49,17 +69,47 @@ export default function BottomSheetScrollView() {
         // Clamp top boundary
         translateY.value = Math.max(SNAP_TOP, nextY);
       }
+      
+      isExpanded.value = translateY.value <= SNAP_TOP + 1;
+      scheduleOnRN(setScrollEnabled, isExpanded.value)
+      // console.log('panGesture isExpanded.value', {
+      //   'isExpanded':isExpanded.value
+      // });
+
     })
     .onEnd(event => {
       const currentY = translateY.value;
       const velocityY = event.velocityY;
+
+      // Log gesture end to verify the snap decision after release.
+      // console.log('panGesture onEnd', {
+      //   currentY,
+      //   velocityY,
+      //   'height * 0.3':height * 0.3
+      // });
 
       if (currentY < height * 0.3) {
         translateY.value = withSpring(SNAP_TOP);
       } else {
         translateY.value = withSpring(SNAP_MIDDLE);
       }
+
     });
+  
+  // useAnimatedReaction(
+  //   () => {
+  //     return isExpanded.value;
+  //   },
+  //   (value, prev) => {
+  //     console.log('useAnimatedReaction', {
+  //       value,
+  //       prev
+  //     })
+  //     if (value !== prev) {
+  //       scheduleOnRN(setScrollEnabled, value)
+  //     }
+  //   }
+  // );
 
   const sheetStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -75,6 +125,7 @@ export default function BottomSheetScrollView() {
             <Animated.ScrollView
               onScroll={scrollHandler}
               scrollEventThrottle={16}
+              scrollEnabled={scrollEnabled}
               contentContainerStyle={styles.content}
             >
               {Array.from({ length: 40 }).map((_, index) => (
