@@ -26,6 +26,13 @@ export default function MenuScreen() {
           <Text style={styles.buttonText}>Open Zeego Example</Text>
         </Pressable>
       </Link>
+
+      {/* Navigate to the Bottom Sheet Scroll View Example page */}
+      <Link href="/bottom-sheet-scroll-view" asChild style={{ marginTop: 15 }}>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Open Bottom Sheet Scroll View Example</Text>
+        </Pressable>
+      </Link>
       
       <StatusBar style="auto" />
     </View>

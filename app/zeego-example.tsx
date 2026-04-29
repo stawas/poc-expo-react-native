@@ -32,14 +32,20 @@ export default function ZeegoExample() {
         </DropdownMenu.Root>
       </View>
 
+      <View
+        style={{
+          height: 400
+        }}
+      ></View>
+
       {/* ContextMenu example - triggers on long press 
           This behaves more like a standard long-press system menu. */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Context Menu (Long Press)</Text>
+        <Text style={styles.sectionTitle}>Long Press</Text>
         <ContextMenu.Root>
           <ContextMenu.Trigger>
             <View style={[styles.button, styles.altButton]}>
-              <Text style={styles.buttonText}>Long Press for Options</Text>
+              <Text style={styles.buttonText}>Press</Text>
             </View>
           </ContextMenu.Trigger>
           <ContextMenu.Content>
@@ -75,6 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    alignItems: 'flex-start',
   },
   title: {
     fontSize: 24,
@@ -85,6 +92,7 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 40,
     alignItems: 'center',
+    backgroundColor: '#007AFF',
   },
   sectionTitle: {
     fontSize: 18,

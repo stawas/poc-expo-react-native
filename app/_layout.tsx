@@ -7,6 +7,7 @@ export default function Layout() {
       <Stack.Screen name="drawer" options={{ title: 'Drawer', gestureEnabled: false }} />
       <Stack.Screen name="long-press-menu" options={{ title: 'Long Press Menu', gestureEnabled: false }} />
       <Stack.Screen name="zeego-example" options={{ title: 'Zeego Example' }} />
+      <Stack.Screen name="bottom-sheet-scroll-view" options={{ title: 'Bottom Sheet Scroll View Example' }} />
     </Stack>
   );
 }
